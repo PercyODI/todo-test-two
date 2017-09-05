@@ -6,6 +6,8 @@ import {
   OnInit,
   ViewEncapsulation
 } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 import { AppState } from './app.service';
 
 /**
@@ -40,32 +42,31 @@ import { AppState } from './app.service';
         routerLinkActive="active" [routerLinkActiveOptions]= "{exact: true}">
         About
       </a>
+      <a [routerLink]=" ['./todos'] "
+      routerLinkActive="active" [routerLinkActiveOptions]= "{exact: true}">
+      Todos
+    </a>
     </nav>
 
     <main>
       <router-outlet></router-outlet>
     </main>
 
-    <pre class="app-state">this.appState.state = {{ appState.state | json }}</pre>
-
-    <footer>
-      <span>WebPack Angular 2 Starter by <a [href]="url">@AngularClass</a></span>
-      <div>
-        <a [href]="url">
-          <img [src]="angularclassLogo" width="25%">
-        </a>
-      </div>
-    </footer>
+    <pre class="app-state">todo reducer state = {{ storeState | async | json }}</pre>
   `
 })
 export class AppComponent implements OnInit {
   public angularclassLogo = 'assets/img/angularclass-avatar.png';
   public name = 'Angular 2 Webpack Starter';
   public url = 'https://twitter.com/AngularClass';
+  public storeState: Observable<any>;
 
   constructor(
-    public appState: AppState
-  ) {}
+    public appState: AppState,
+    private store: Store<any>
+  ) {
+    this.storeState = this.store.select('todos');
+  }
 
   public ngOnInit() {
     console.log('Initial App State', this.appState.state);

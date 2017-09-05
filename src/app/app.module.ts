@@ -14,6 +14,7 @@ import {
   RouterModule,
   PreloadAllModules
 } from '@angular/router';
+import { StoreModule } from '@ngrx/store';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -30,6 +31,12 @@ import { HomeComponent } from './home';
 import { AboutComponent } from './about';
 import { NoContentComponent } from './no-content';
 import { XLargeDirective } from './home/x-large';
+
+// Import components
+import { TodosComponent } from './todos.component';
+
+// Import reducers
+import { reducers } from './reducers';
 
 import '../styles/styles.scss';
 import '../styles/headings.css';
@@ -56,7 +63,8 @@ type StoreType = {
     AboutComponent,
     HomeComponent,
     NoContentComponent,
-    XLargeDirective
+    XLargeDirective,
+    TodosComponent
   ],
   /**
    * Import Angular's modules.
@@ -69,7 +77,8 @@ type StoreType = {
     RouterModule.forRoot(ROUTES, {
       useHash: Boolean(history.pushState) === false,
       preloadingStrategy: PreloadAllModules
-    })
+    }),
+    StoreModule.forRoot(reducers)
   ],
   /**
    * Expose our Services and Providers into Angular's dependency injection.

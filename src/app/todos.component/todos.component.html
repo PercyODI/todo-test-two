@@ -1,0 +1,21 @@
+<br>
+<input placeholder="Your todo" [(ngModel)]="newTodoValue" (keyup.enter)="addTodo(newTodoValue)">
+<button (click)="addTodo(newTodoValue)" [disabled]="!newTodoValue">Add Todo</button>
+
+<div *ngFor="let todo of incompleteTodos$; let i = index">
+  <i *ngIf="todo.done" class="fa fa-check-square-o" aria-hidden="true"  (click)="toggleDone(todo)"></i>
+  <i *ngIf="!todo.done" class="fa fa-square-o" aria-hidden="true"  (click)="toggleDone(todo)"></i>
+  <span *ngIf="editing[todo.id] === undefined" (click)="startEditing(todo)">
+        {{todo.value}} 
+    </span>
+  <span *ngIf="editing[todo.id] !== undefined">
+        <input [(ngModel)]="editing[todo.id]" (keyup.enter)="updateTodo(todo, editing[todo.id])">
+    </span>
+</div>
+
+<h3>Completed Todos:</h3>
+<div *ngFor="let todo of completedTodos$; let i = index">
+  <i *ngIf="todo.done" class="fa fa-check-square-o" aria-hidden="true" (click)="toggleDone(todo)"></i>
+  <i *ngIf="!todo.done" class="fa fa-square-o" aria-hidden="true" (click)="toggleDone(todo)"></i>
+  <span>{{todo.value}}</span>
+</div>
