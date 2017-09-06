@@ -10,6 +10,7 @@ export interface TodoPayload {
 
 export interface Todo {
     id: string;
+    order: number;
     value: string;
     done: boolean;
 }

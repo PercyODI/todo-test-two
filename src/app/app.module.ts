@@ -33,7 +33,7 @@ import { NoContentComponent } from './no-content';
 import { XLargeDirective } from './home/x-large';
 
 // Import components
-import { TodosComponent } from './todos.component';
+import { TodosComponent, TodosListComponent } from './todos.component';
 
 // Import reducers
 import { reducers } from './reducers';
@@ -64,7 +64,8 @@ type StoreType = {
     HomeComponent,
     NoContentComponent,
     XLargeDirective,
-    TodosComponent
+    TodosComponent,
+    TodosListComponent
   ],
   /**
    * Import Angular's modules.

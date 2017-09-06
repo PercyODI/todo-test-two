@@ -4,11 +4,13 @@ import {
 } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
+import _ from 'lodash';
 import {
   Todo
 } from '../reducers/todos/';
 import * as todoActions from '../reducers/todos/todo.actions';
 
+import { TodosListComponent } from './todos-list.component';
 
 @Component({
   /**
@@ -35,6 +37,7 @@ export class TodosComponent implements OnInit {
    * Set our default values
    */
   public localState = { value: '' };
+  public searchTodoString: string = '';
   public todos$: Todo[];
   public completedTodos$: Todo[];
   public incompleteTodos$: Todo[];
@@ -45,25 +48,26 @@ export class TodosComponent implements OnInit {
    * TypeScript public modifiers
    */
   constructor(
-    private store: Store<any>
+    public store: Store<any>
   ) { }
 
   public ngOnInit() {
     console.log('hello `Todos` component');
     this.store.select<Todo[]>((s) => s.todos).subscribe((todos) => {
       this.todos$ = todos;
-      this.completedTodos$ = todos.filter((todo) => todo.done);
-      this.incompleteTodos$ = todos.filter((todo) => !todo.done).sort((a, b) => {
-        let valueA = a.value.toUpperCase(); // ignore upper and lowercase
-        let valueB = b.value.toUpperCase(); // ignore upper and lowercase
-        if (valueA < valueB) {
-          return -1;
-        }
-        if (valueA > valueB) {
-          return 1;
-        }
-        return 0;
-      });
+      this.filterCompletedTodos();
+      this.filterIncompleteTodos();
+      // this.incompleteTodos$ = todos.filter((todo) => !todo.done).sort((a, b) => {
+      //   let valueA = a.value.toUpperCase(); // ignore upper and lowercase
+      //   let valueB = b.value.toUpperCase(); // ignore upper and lowercase
+      //   if (valueA < valueB) {
+      //     return -1;
+      //   }
+      //   if (valueA > valueB) {
+      //     return 1;
+      //   }
+      //   return 0;
+      // });
     });
   }
 
@@ -83,5 +87,35 @@ export class TodosComponent implements OnInit {
 
   public toggleDone(todo: Todo) {
     this.store.dispatch(todoActions.toggleTodoDone(todo));
+  }
+
+  public filterCompletedTodos() {
+    this.completedTodos$ = _(this.todos$)
+      .filter((todo) => todo.done)
+      .filter((todo) =>
+        this.searchTodoString
+          ? todo.value.toUpperCase().includes(this.searchTodoString.toUpperCase())
+          : true)
+      .sortBy((todo) => todo.order)
+      .value();
+  }
+
+  public filterIncompleteTodos() {
+    this.incompleteTodos$ = _(this.todos$)
+      .filter((todo) => !todo.done)
+      .filter((todo) =>
+        this.searchTodoString
+          ? todo.value.toUpperCase().includes(this.searchTodoString.toUpperCase())
+          : true)
+      .sortBy((todo) => todo.order)
+      .value();
+  }
+
+  public increaseTodoOrder(todo: Todo) {
+    this.store.dispatch(todoActions.increaseTodoOrder(todo));
+  }
+
+  public decreaseTodoOrder(todo: Todo) {
+    this.store.dispatch(todoActions.decreaseTodoOrder(todo));
   }
 }
