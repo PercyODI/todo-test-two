@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import _ from 'lodash';
 import {
-  Todo
+  Todo, TodoState
 } from '../reducers/todos/';
 import * as todoActions from '../reducers/todos/todo.actions';
 
@@ -38,6 +38,7 @@ export class TodosComponent implements OnInit {
    */
   public localState = { value: '' };
   public searchTodoString: string = '';
+  public isLoading = false;
   public todos$: Todo[];
   public completedTodos$: Todo[];
   public incompleteTodos$: Todo[];
@@ -53,8 +54,9 @@ export class TodosComponent implements OnInit {
 
   public ngOnInit() {
     console.log('hello `Todos` component');
-    this.store.select<Todo[]>((s) => s.todos).subscribe((todos) => {
-      this.todos$ = todos;
+    this.store.select<TodoState>((s) => s.todos).subscribe((todoState) => {
+      this.isLoading = todoState.loading;
+      this.todos$ = todoState.todos;
       this.filterCompletedTodos();
       this.filterIncompleteTodos();
       // this.incompleteTodos$ = todos.filter((todo) => !todo.done).sort((a, b) => {
@@ -87,6 +89,10 @@ export class TodosComponent implements OnInit {
 
   public toggleDone(todo: Todo) {
     this.store.dispatch(todoActions.toggleTodoDone(todo));
+  }
+
+  public getTestTodos() {
+    this.store.dispatch(todoActions.getTodos());
   }
 
   public filterCompletedTodos() {

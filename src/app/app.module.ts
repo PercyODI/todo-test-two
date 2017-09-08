@@ -15,6 +15,7 @@ import {
   PreloadAllModules
 } from '@angular/router';
 import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -36,7 +37,7 @@ import { XLargeDirective } from './home/x-large';
 import { TodosComponent, TodosListComponent } from './todos.component';
 
 // Import reducers
-import { reducers } from './reducers';
+import { reducers, GetTodoEffects } from './reducers';
 
 import '../styles/styles.scss';
 import '../styles/headings.css';
@@ -79,7 +80,10 @@ type StoreType = {
       useHash: Boolean(history.pushState) === false,
       preloadingStrategy: PreloadAllModules
     }),
-    StoreModule.forRoot(reducers)
+    StoreModule.forRoot(reducers),
+    EffectsModule.forRoot([
+      GetTodoEffects
+    ])
   ],
   /**
    * Expose our Services and Providers into Angular's dependency injection.

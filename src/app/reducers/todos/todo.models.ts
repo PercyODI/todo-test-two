@@ -14,3 +14,8 @@ export interface Todo {
     value: string;
     done: boolean;
 }
+
+export interface TodoState {
+    loading: boolean;
+    todos: Todo[]
+}
